@@ -24,8 +24,8 @@ public class Attachments {
     private String fileUrl;
 
     @ManyToOne
-    @JoinColumn(name = "task_id")
-    private Task task;
+    @JoinColumn(name = "assignment_id")
+    private Assignments assignments;
 
     @Column(name = "created_time")
     private String createdTime;
