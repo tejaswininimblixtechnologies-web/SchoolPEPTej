@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -99,6 +100,82 @@ public class AuthController {
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Collections.singletonMap("message", "Login failed."));
+        }
+    }
+
+    @PostMapping("/teacher/login")
+    public ResponseEntity<?> teacherLogin(@RequestBody AuthStudentRequest request) {
+        try{
+            if(request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of(
+                                SchoolConstants.STATUS, SchoolConstants.STATUS_FAILURE,
+                                SchoolConstants.MESSAGE, "Email is required"
+                        ));
+            }
+            if(request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of(
+                                SchoolConstants.STATUS, SchoolConstants.STATUS_FAILURE,
+                                SchoolConstants.MESSAGE, "Password is required"
+                        ));
+            }
+
+            User user=userRepository.findByEmailId(request.getEmail())
+                    .filter(u -> SchoolConstants.ACTIVE.equalsIgnoreCase(u.getStatus()))
+                    .orElse(null);
+
+            if(user == null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of(
+                                SchoolConstants.STATUS, SchoolConstants.STATUS_FAILURE,
+                                SchoolConstants.MESSAGE, "Teacher not found or inactive"
+                        ));
+            }
+
+            if(!SchoolConstants.TEACHER_ROLE.equalsIgnoreCase(user.getRole().getRoleName())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of(
+                                SchoolConstants.STATUS, SchoolConstants.STATUS_FAILURE,
+                                SchoolConstants.MESSAGE, "Not a teacher account"
+                        ));
+            }
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+
+            var userDetails=userDetailsService.loadUserByUsername(request.getEmail());
+            String token=jwtUtil.generateToken(userDetails);
+
+            AuthStudentResponse data=new AuthStudentResponse();
+            data.setUserId(user.getId());
+            data.setFirstName(user.getFirstName());
+            data.setLastName(user.getLastName());
+            data.setEmail(user.getEmailId());
+            data.setRole(user.getRole().getRoleName());
+            data.setToken(token);
+
+            return ResponseEntity.ok(Map.of(
+                    SchoolConstants.STATUS, SchoolConstants.STATUS_SUCCESS,
+                    SchoolConstants.MESSAGE, "Login successful",
+                    SchoolConstants.DATA, data
+            ));
+        } catch(BadCredentialsException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(
+                            SchoolConstants.STATUS, SchoolConstants.STATUS_FAILURE,
+                            SchoolConstants.MESSAGE, "Invalid password"
+                    ));
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of(
+                            SchoolConstants.STATUS, SchoolConstants.STATUS_FAILURE,
+                            SchoolConstants.MESSAGE, "Teacher login failed"
+                    ));
         }
     }
 }
