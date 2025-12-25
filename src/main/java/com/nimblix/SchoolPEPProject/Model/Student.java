@@ -31,16 +31,4 @@ public class Student extends User {
     @Column(name = "registration_no")
     private Long registrationNo;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "section_id")
-    private Long sectionId;
-
-    @Column(name = "email")
-    private String email;
-
-
-
 }

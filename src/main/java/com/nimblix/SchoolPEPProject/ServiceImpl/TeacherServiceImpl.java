@@ -2,14 +2,10 @@ package com.nimblix.SchoolPEPProject.ServiceImpl;
 
 import com.nimblix.SchoolPEPProject.Constants.SchoolConstants;
 import com.nimblix.SchoolPEPProject.Exception.UserNotFoundException;
-import com.nimblix.SchoolPEPProject.Model.Classroom;
-import com.nimblix.SchoolPEPProject.Model.Role;
-import com.nimblix.SchoolPEPProject.Model.Teacher;
-import com.nimblix.SchoolPEPProject.Model.User;
-import com.nimblix.SchoolPEPProject.Repository.ClassroomRepository;
-import com.nimblix.SchoolPEPProject.Repository.RoleRepository;
-import com.nimblix.SchoolPEPProject.Repository.TeacherRepository;
-import com.nimblix.SchoolPEPProject.Repository.UserRepository;
+import com.nimblix.SchoolPEPProject.Model.*;
+
+import com.nimblix.SchoolPEPProject.Repository.*;
+import com.nimblix.SchoolPEPProject.Request.AssignmentShareRequest;
 import com.nimblix.SchoolPEPProject.Request.ClassroomRequest;
 import com.nimblix.SchoolPEPProject.Request.TeacherRegistrationRequest;
 import com.nimblix.SchoolPEPProject.Response.TeacherDetailsResponse;
@@ -33,6 +29,13 @@ public class TeacherServiceImpl implements TeacherService {
     private final RoleRepository roleRepository;
     private final ClassroomRepository classroomRepository;
     private final PasswordEncoder passwordEncoder;
+
+    //--------------------Assignment Sharing--------------------//
+    private final AssignmentsRepository assignmentRepository;
+    private final StudentRepository studentRepository;
+
+
+
     Map<String, String> response = new HashMap<>();
 
     @Override
@@ -183,5 +186,63 @@ public class TeacherServiceImpl implements TeacherService {
         return response;
     }
 
+    //-------------Assignment Share Service Implementation ----------------
+    @Override
+    public Map<String, String> shareAssignment(
+            Long assignmentId,
+            AssignmentShareRequest request) {
+
+        Map<String, String> response = new HashMap<>();
+
+        if (assignmentId == null || assignmentId <= 0) {
+            response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_ERORR);
+            response.put(SchoolConstants.MESSAGE, "Assignment ID is required");
+            return response;
+        }
+
+        if (request.getClassId() == null) {
+            response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_ERORR);
+            response.put(SchoolConstants.MESSAGE, "classId is required");
+            return response;
+        }
+
+        if (request.getSection() == null || request.getSection().isBlank()) {
+            response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_ERORR);
+            response.put(SchoolConstants.MESSAGE, "section is required");
+            return response;
+        }
+
+        Optional<Assignments> assignmentOptional =
+                assignmentRepository.findById(assignmentId);
+
+        if (assignmentOptional.isEmpty()) {
+            response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_ERORR);
+            response.put(SchoolConstants.MESSAGE, "Assignment not found");
+            return response;
+        }
+
+        List<Student> students =
+                studentRepository.findByClassIdAndSection(
+                        request.getClassId(),
+                        request.getSection()
+                );
+
+        if (students.isEmpty()) {
+            response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_ERORR);
+            response.put(SchoolConstants.MESSAGE,
+                    "No students found for given class and section");
+            return response;
+        }
+
+        Assignments assignment = assignmentOptional.get();
+        assignment.setShared(true);
+        assignmentRepository.save(assignment);
+
+        response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_SUCCESS);
+        response.put(SchoolConstants.MESSAGE,
+                "Assignment shared successfully with students");
+
+        return response;
+    }
 
 }

@@ -49,7 +49,7 @@ public class SecurityConfig {
                                 "/auth/**",
                                 "/school/**",
                                 "/teacher/**",
-                                "/api/assignments/**"
+                                "/api/teacher/assignments/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

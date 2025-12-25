@@ -1,5 +1,6 @@
 package com.nimblix.SchoolPEPProject.Service;
 
+import com.nimblix.SchoolPEPProject.Request.AssignmentShareRequest;
 import com.nimblix.SchoolPEPProject.Request.ClassroomRequest;
 import com.nimblix.SchoolPEPProject.Request.TeacherRegistrationRequest;
 import com.nimblix.SchoolPEPProject.Response.TeacherDetailsResponse;
@@ -19,4 +20,8 @@ public interface TeacherService {
     Map<String, String> updateTeacherDetails(TeacherRegistrationRequest request, Long teacherId);
 
     Map<String, String> deleteTeacherDetails(Long teacherId, Long schoolId);
+
+    Map<String, String> shareAssignment(Long assignmentId, AssignmentShareRequest request);
+
+
 }

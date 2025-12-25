@@ -1,12 +1,15 @@
 package com.nimblix.SchoolPEPProject.Request;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class AssignmentShareRequest {
 
     private Long classId;
-    private Long sectionId;
-    private List<String> shareChannels; // APP, EMAIL, NOTIFICATION
+    private String section;
+    private List<String> shareChannels;
 }

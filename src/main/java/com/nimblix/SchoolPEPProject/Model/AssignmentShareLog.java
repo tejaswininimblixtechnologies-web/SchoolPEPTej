@@ -17,7 +17,7 @@ public class AssignmentShareLog {
 
     private Long assignmentId;
     private Long classId;
-    private Long sectionId;
+    private String section;
 
     @ElementCollection
     @CollectionTable(

@@ -44,9 +44,6 @@ public class Assignments {
     @Column(name = "updated_time")
     private String updatedTime;
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "shared")
     private Boolean shared=false;
 
