@@ -43,8 +43,10 @@ public class AuthController {
             // Fetch from DB
             User user = userRepository
                     .findByEmailId(request.getEmail())
-                    .filter(u -> u.getStatus().equalsIgnoreCase(SchoolConstants.ACTIVE))
+                    .filter(u -> u.getStatus()
+                            .equalsIgnoreCase(SchoolConstants.STATUS_ACTIVE))
                     .orElse(null);
+
 
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)

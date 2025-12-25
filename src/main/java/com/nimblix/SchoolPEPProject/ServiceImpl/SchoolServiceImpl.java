@@ -73,7 +73,7 @@ public class SchoolServiceImpl implements SchoolService {
                 .longitude(request.getLongitude())
                 .locationType(locationType)
                 .emailVerified(Boolean.FALSE)
-                .status(SchoolConstants.ACTIVE)
+                .status(SchoolConstants.STATUS_ACTIVE)
                 .build();
 
         schoolRepository.save(school);
@@ -96,7 +96,7 @@ public class SchoolServiceImpl implements SchoolService {
                 request.getSchoolEmail(),
                 request.getSchoolName(),
                 String.valueOf(otp),
-                "School Registration OTP Verification" // ✅
+                "School Registration OTP Verification"
         );
 
 
@@ -211,7 +211,7 @@ public class SchoolServiceImpl implements SchoolService {
                 schoolSubscriptionRepository
                         .findTopBySchoolIdAndPaymentStatusOrderByIdDesc(
                                 school.getSchoolId(),
-                                SchoolConstants.ACTIVE
+                                SchoolConstants.STATUS_ACTIVE
                         );
 
         if (activeSub.isPresent()) {
@@ -234,7 +234,7 @@ public class SchoolServiceImpl implements SchoolService {
                         .planType(request.getPlanType())
                         .amount(request.getAmount())
                         .paymentRef(request.getPaymentRef())
-                        .paymentStatus(SchoolConstants.ACTIVE)
+                        .paymentStatus(SchoolConstants.STATUS_ACTIVE)
                         .startDate(SchoolUtil.nowIST())
                         .endDate(SchoolUtil.plusDaysIST(365))
                         .build();

@@ -2,21 +2,25 @@ package com.nimblix.SchoolPEPProject.Service;
 
 import com.nimblix.SchoolPEPProject.Request.StudentRegistrationRequest;
 import com.nimblix.SchoolPEPProject.Response.StudentDetailsResponse;
+import com.nimblix.SchoolPEPProject.Response.StudentResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface StudentService {
-    ResponseEntity<?> registerStudent(StudentRegistrationRequest studentRegistrationRequest);
 
+    // Register student
+    ResponseEntity<?> registerStudent(StudentRegistrationRequest request);
 
-    void deleteStudent(Long studentId);
-
+    // Update student details
     void updateStudentDetails(Long studentId, StudentRegistrationRequest request);
 
+    //  delete stud
+    void deleteStudent(Long studentId);
+
+    // Get students by schoolId
     List<StudentDetailsResponse> getStudentsBySchoolId(Long schoolId);
 
-//    void updateStudentDetails(Integer studentId, StudentRegistrationRequest request);
+    //  Get single student profile
+    StudentResponse getStudentProfile(Long studentId);
 }

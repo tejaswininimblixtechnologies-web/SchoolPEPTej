@@ -9,7 +9,14 @@ public interface TeacherRepository extends JpaRepository<Teacher,Long> {
 
     boolean existsByEmailId(String email);
 
-    @Query("SELECT t FROM Teacher t WHERE t.id = :teacherId AND t.schoolId = :schoolId")
-    Teacher findByTeacherIdAndSchoolId(@Param("teacherId") Long teacherId,
-                                       @Param("schoolId") Long schoolId);
+    @Query("""
+SELECT t FROM Teacher t
+WHERE t.id = :teacherId
+AND t.schoolId = :schoolId
+""")
+    Teacher findByTeacherIdAndSchoolId(
+            @Param("teacherId") Long teacherId,
+            @Param("schoolId") Long schoolId
+    );
+
 }

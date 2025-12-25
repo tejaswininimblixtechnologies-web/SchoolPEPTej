@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -18,4 +20,17 @@ public class TeacherDetailsResponse {
     private String designation;
     private String gender;
     private String status;
+
+    private List<Subjectresponse> subjects;
+
+    @Getter
+    @Setter
+    @Builder
+    public static class Subjectresponse{
+        private Long subjectId;
+        private String subjectName;
+        private String subjectCode;
+        private Long classRoomId;
+
+    }
 }
