@@ -1,6 +1,7 @@
 package com.nimblix.SchoolPEPProject.Repository;
 
 import com.nimblix.SchoolPEPProject.Model.School;
+import com.nimblix.SchoolPEPProject.Model.Student;
 import com.nimblix.SchoolPEPProject.Response.SchoolListResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,4 +24,6 @@ public interface SchoolRepository extends JpaRepository<School,Long> {
 
 
     Optional<School> findBySchoolEmail(String schoolEmail);
+
+
 }

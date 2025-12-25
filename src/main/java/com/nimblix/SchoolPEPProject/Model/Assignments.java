@@ -44,6 +44,9 @@ public class Assignments {
     @Column(name = "updated_time")
     private String updatedTime;
 
+    @Column(name = "shared")
+    private Boolean shared=false;
+
     @PrePersist
     protected void onCreate() {
         createdTime = SchoolUtil.changeCurrentTimeToLocalDateFromGmtToISTInString();

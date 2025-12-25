@@ -1,5 +1,6 @@
 package com.nimblix.SchoolPEPProject.Controller;
 
+import com.nimblix.SchoolPEPProject.Request.AssignmentShareRequest;
 import com.nimblix.SchoolPEPProject.Request.ClassroomRequest;
 import com.nimblix.SchoolPEPProject.Request.TeacherRegistrationRequest;
 import com.nimblix.SchoolPEPProject.Response.TeacherDetailsResponse;
@@ -56,6 +57,19 @@ public class TeacherController {
     public ResponseEntity<Map<String, String>> createClassroom(@RequestBody ClassroomRequest request) {
         return teacherService.createClassroom(request);
     }
+
+
+//-------------Assignment Share Controller Methods ----------------
+@PostMapping("/assignments/{assignmentId}/share")
+public ResponseEntity<Map<String, String>> shareAssignment(
+        @PathVariable Long assignmentId,
+        @RequestBody AssignmentShareRequest request) {
+
+    Map<String, String> response =
+            teacherService.shareAssignment(assignmentId, request);
+
+    return ResponseEntity.ok(response);
+}
 
 
 }
