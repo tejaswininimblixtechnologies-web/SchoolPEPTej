@@ -63,6 +63,19 @@ public class StudentController {
     }
 
 
+    @GetMapping("/list")
+    public ResponseEntity<?> getStudentList(
+            @RequestParam Long schoolId,
+            @RequestParam Long classId,
+            @RequestParam String section
+    ){
+        List<StudentDetailsResponse> students=studentService.getStudentsBySchoolClassAndSection(schoolId, classId, section);
+        Map<String, Object> response = new HashMap<>();
+        response.put(SchoolConstants.STATUS, SchoolConstants.STATUS_SUCCESS);
+        response.put("data", students);
+
+        return ResponseEntity.ok(response);
+    }
 
 
     @PostMapping("/update")
